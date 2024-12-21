@@ -1,8 +1,7 @@
 export class User {
-  id: string
+  id: number
   email: string
   name: string
-  hashedPassword: string
   createdAt: Date
   updatedAt: Date
   deletedAt: Date
