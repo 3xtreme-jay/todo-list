@@ -8,6 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common'
+import { TokenDTO } from 'model/dto/TokenDTO'
 import { CreateUserDTO } from 'model/dto/CreateUserDTO'
 import { UpdateUserDTO } from 'model/dto/UpdateUserDTO'
 import { User } from 'model/User'
@@ -15,8 +16,8 @@ import { User } from 'model/User'
 @Controller('users')
 export class UserController {
   @Get('')
-  getUser(@Query('token') token: string): User {
-    console.log(`GetUser: ${token}`)
+  getUser(@Query() query: TokenDTO): User {
+    console.log(`GetUser: ${query.token}`)
     throw NotImplementedException
   }
 
@@ -27,15 +28,15 @@ export class UserController {
   }
 
   @Put('')
-  updateUser(@Query('token') token: string, @Body() dto: UpdateUserDTO): User {
-    console.log(`UpdateUser: ${token}`)
+  updateUser(@Query() query: TokenDTO, @Body() dto: UpdateUserDTO): User {
+    console.log(`UpdateUser: ${query.token}`)
     console.log(JSON.stringify(dto, undefined, 2))
     throw NotImplementedException
   }
 
   @Delete('')
-  DeleteUser(@Query('token') token: string): User {
-    console.log(`DeleteUser: ${token}`)
+  DeleteUser(@Query() query: TokenDTO): User {
+    console.log(`DeleteUser: ${query.token}`)
     throw NotImplementedException
   }
 }
