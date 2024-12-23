@@ -13,6 +13,7 @@ export class TaskRepository {
       title: task.title,
       description: task.description,
       status: task.status as TaskStatus,
+      userId: task.user_id,
       createdAt: task.created_at,
       updatedAt: task.updated_at,
       deletedAt: task.deleted_at,

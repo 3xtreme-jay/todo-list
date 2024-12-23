@@ -3,6 +3,7 @@ export class Task {
   title: string
   description: string
   status: TaskStatus
+  userId: number
   createdAt: Date
   updatedAt: Date
   deletedAt: Date
