@@ -24,7 +24,6 @@ export class UserRepository {
   }
 
   async insert(email: string, password: string, name: string): Promise<User> {
-    // TODO: hash password
     const user = await this.prismaService.user.create({
       data: {
         email,
@@ -44,6 +43,13 @@ export class UserRepository {
   }
 
   async delete(id: number): Promise<User> {
+    const targetUser = await this.prismaService.user.findFirst({
+      where: { id, deleted_at: null },
+    })
+    if (!targetUser) {
+      throw new Error('Invalid user to delete')
+    }
+
     const user = await this.prismaService.user.update({
       where: { id },
       data: { deleted_at: new Date() },
