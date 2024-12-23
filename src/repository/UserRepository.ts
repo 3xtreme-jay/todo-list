@@ -18,9 +18,9 @@ export class UserRepository {
     }
   }
 
-  async find(id: number): Promise<User> {
+  async find(id: number): Promise<User | undefined> {
     const user = await this.prismaService.user.findFirst({ where: { id } })
-    return this.convertToModel(user)
+    return user ? this.convertToModel(user) : undefined
   }
 
   async insert(email: string, password: string, name: string): Promise<User> {

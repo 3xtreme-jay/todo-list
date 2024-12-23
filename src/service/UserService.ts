@@ -10,7 +10,7 @@ export class UserService {
     private readonly tokenService: TokenService,
   ) {}
 
-  async getUser(token: string): Promise<User> {
+  async getUser(token: string): Promise<User | undefined> {
     const userId = this.tokenService.decode(token)
     return this.userRepository.find(userId)
   }
