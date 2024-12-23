@@ -1,7 +1,7 @@
-import { IsJWT, IsNotEmpty, IsString, MinLength } from 'class-validator'
+import { IsNotEmpty, IsNumber, Max } from 'class-validator'
 
 export class IdDTO {
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  id: string
+  id: number
 }
