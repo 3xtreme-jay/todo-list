@@ -3,10 +3,12 @@ import { TokenService } from 'service/TokenService'
 import { UserService } from 'service/UserService'
 import { RepositoryModule } from './repository.module'
 import { env } from 'process'
+import { TaskService } from 'service/TaskService'
 
 @Module({
   imports: [RepositoryModule],
   providers: [
+    TaskService,
     {
       provide: TokenService,
       useFactory: () => {
@@ -16,6 +18,6 @@ import { env } from 'process'
     },
     UserService,
   ],
-  exports: [TokenService, UserService],
+  exports: [TaskService, TokenService, UserService],
 })
 export class ServiceModule {}

@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  NotImplementedException,
   Param,
   Post,
   Put,
@@ -14,38 +13,67 @@ import { IdDTO } from 'model/dto/IdDTO'
 import { TokenDTO } from 'model/dto/TokenDTO'
 import { UpdateTaskDTO } from 'model/dto/UpdateTaskDTO'
 import { Task } from 'model/Task'
-import { User } from 'model/User'
+import { TaskService } from 'service/TaskService'
 
 @Controller('tasks')
 export class TaskController {
+  constructor(private readonly taskService: TaskService) {}
+
   @Get(':id')
-  getTask(@Param() params: IdDTO): Task {
-    console.log(`GetTask: ${params.id}`)
-    throw NotImplementedException
+  async getTask(
+    @Param() params: IdDTO,
+    @Query() query: TokenDTO,
+  ): Promise<Task> {
+    const { id } = params
+    const { token } = query
+
+    console.log(`GetTask: ${id}`)
+    console.log(`token: ${token}`)
+
+    const task = await this.taskService.getTask(id, token)
+    if (!task) {
+      throw new Error(`No task with id ${id}`)
+    }
+
+    return task
   }
 
   @Post('')
-  createTask(@Body() dto: CreateTaskDTO): User {
+  async createTask(@Body() dto: CreateTaskDTO): Promise<Task> {
     console.log(`CreateTask: ${JSON.stringify(dto, undefined, 2)}`)
-    throw NotImplementedException
+
+    const { title, description, token } = dto
+    return this.taskService.createTask(title, description, token)
   }
 
   @Put(':id')
-  updateTask(
+  async updateTask(
     @Param() params: IdDTO,
     @Query() query: TokenDTO,
     @Body() dto: UpdateTaskDTO,
-  ): User {
+  ): Promise<Task> {
     console.log(`UpdateTask: ${params.id}`)
     console.log(`token: ${query.token}`)
     console.log(JSON.stringify(dto, undefined, 2))
-    throw NotImplementedException
+
+    const { title, description, status } = dto
+    return this.taskService.updateTask(
+      params.id,
+      query.token,
+      title,
+      description,
+      status,
+    )
   }
 
   @Delete(':id')
-  DeleteTask(@Param() params: IdDTO, @Query() query: TokenDTO): User {
+  async DeleteTask(
+    @Param() params: IdDTO,
+    @Query() query: TokenDTO,
+  ): Promise<Task> {
     console.log(`DeleteTask: ${params.id}`)
     console.log(`token: ${query.token}`)
-    throw NotImplementedException
+
+    return this.taskService.deleteTask(params.id, query.token)
   }
 }

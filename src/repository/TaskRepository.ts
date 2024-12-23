@@ -20,9 +20,9 @@ export class TaskRepository {
     }
   }
 
-  async find(id: number): Promise<Task> {
+  async find(id: number): Promise<Task | undefined> {
     const task = await this.prismaService.task.findFirst({ where: { id } })
-    return this.convertToModel(task)
+    return task ? this.convertToModel(task) : undefined
   }
 
   async insert(
@@ -59,6 +59,13 @@ export class TaskRepository {
   }
 
   async delete(id: number): Promise<Task> {
+    const targetTask = await this.prismaService.task.findFirst({
+      where: { id, deleted_at: null },
+    })
+    if (!targetTask) {
+      throw new Error('Invalid task to delete')
+    }
+
     const task = await this.prismaService.task.update({
       where: { id },
       data: { deleted_at: new Date() },
