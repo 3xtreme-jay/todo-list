@@ -34,7 +34,7 @@ export class TaskRepository {
         title,
         description,
         user_id: userId,
-        status: 'OPEN',
+        status: TaskStatus.OPEN,
       },
     })
     return this.convertToModel(task)
@@ -47,7 +47,7 @@ export class TaskRepository {
     status?: TaskStatus,
   ): Promise<Task> {
     const task = await this.prismaService.task.update({
-      where: { id },
+      where: { id, deleted_at: null },
       data: {
         title,
         description,
@@ -58,7 +58,10 @@ export class TaskRepository {
   }
 
   async delete(id: number): Promise<Task> {
-    const task = await this.prismaService.task.delete({ where: { id } })
+    const task = await this.prismaService.task.update({
+      where: { id },
+      data: { deleted_at: new Date() },
+    })
     return this.convertToModel(task)
   }
 }

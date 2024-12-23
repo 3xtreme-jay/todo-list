@@ -37,14 +37,17 @@ export class UserRepository {
 
   async update(id: number, name: string): Promise<User> {
     const user = await this.prismaService.user.update({
-      where: { id },
+      where: { id, deleted_at: null },
       data: { name },
     })
     return this.convertToModel(user)
   }
 
   async delete(id: number): Promise<User> {
-    const user = await this.prismaService.user.delete({ where: { id } })
+    const user = await this.prismaService.user.update({
+      where: { id },
+      data: { deleted_at: new Date() },
+    })
     return this.convertToModel(user)
   }
 }
